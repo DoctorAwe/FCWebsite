@@ -7,6 +7,7 @@ import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
 import { SvgIcon } from '@mui/material';
+import { FlagIcon } from '@heroicons/react/20/solid';
 
 export const items = [
   {
@@ -80,5 +81,14 @@ export const items = [
         <XCircleIcon />
       </SvgIcon>
     )
+  },
+  {
+    title: 'Test',
+      path: '/test',
+    icon: (
+    <SvgIcon fontSize="small">
+      <FlagIcon/>
+    </SvgIcon>
+  )
   }
 ];
