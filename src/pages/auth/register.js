@@ -3,39 +3,73 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Link, Stack, TextField, Typography } from '@mui/material';
+import Cool from 'src/pages/auth/cool.js'
+import { Progress } from 'antd';
+
+import {
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  Link,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+import PhoneIcon from '@heroicons/react/24/solid/PhoneIcon';
+import { useEffect, useState } from 'react';
 
 const Page = () => {
+  const  [nameOk, setNameOk] = useState(false);
+  const  [passStrength,setPassStrength] = useState(0);
   const router = useRouter();
   const auth = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: '',
+      tel:'',
       name: '',
+
       password: '',
-      submit: null
+      verificationCode:'',
+      submit: null,
+
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email('Must be a valid email')
-        .max(255)
-        .required('Email is required'),
+
       name: Yup
         .string()
         .max(255)
         .required('Name is required'),
+
       password: Yup
         .string()
         .max(255)
-        .required('Password is required')
+        .required('Password is required'),
+      tel: Yup
+        .string()
+        .matches(/^1[3-9]\d{9}$/, 'Must be a valid Tel') // 正则表达式来验证中国大陆的手机号
+        .max(255)
+        .required('Tel is required'),
+      verificationCode: Yup
+        .string()
+        .matches(/^[0-9]+$/, 'Must be a valid verification code') // 正则表达式来验证纯数字
+        .max(255)
+        .required('verification code is required'),
+
+
+
+
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signUp(values.email, values.name, values.password);
-        router.push('/');
+
+        await auth.signUp( formik.values.name, formik.values.password, formik.values.tel, formik.values.verificationCode);
+        console.log("注册完了跳");
+        router.push('/auth/login'); // 这里进行页面跳转
+
+
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -43,6 +77,74 @@ const Page = () => {
       }
     }
   });
+  useEffect(() => {
+    console.log("----" + formik.values.name);
+    handleAccountChange();
+  }, [formik.values.name]);
+
+  useEffect(() =>{
+    handlePwdChange();
+  }, [formik.values.password])
+
+  useEffect(() =>{
+    setPassStrength(countPasswordTypes(formik.values.password));
+  }, [formik.values.password])
+
+  const PasswordStrength = ({ strength }) => {
+    return (
+      <Progress
+        percent={strength * 25} // 每个级别 25%
+        steps={4}
+        strokeColor={['#e74242', '#EFBD47', '#ffa500', '#1bbf1b' ]}
+        showInfo={false}
+
+      />
+    );
+  };
+
+
+  async function handleAccountChange() {
+
+
+      console.log("now acc change to " + formik.values.name);
+
+      const url = '/api/user/username_check';
+      const data = { 'username': formik.values.name };
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const resData = await response.json();
+
+      if (resData.code === 1) {
+        setNameOk(false);
+        console.log("now 用户名不可用：  " + formik.values.name);
+        return;
+      }
+
+      console.log("now 用户名可用：  " + formik.values.name);
+      console.log("响应体: ", resData); // 打印响应体
+      setNameOk(true);
+
+
+  }
+
+  const countPasswordTypes = (password) => {
+    return (/\d/.test(password) + /[A-Z]/.test(password) + /[a-z]/.test(password) + /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password));
+  };
+
+  function handlePwdChange() {
+    console.log("now Pwd change to " + formik.values.password);
+    console.log("密码强度 = " + countPasswordTypes(formik.values.password));
+  }
 
   return (
     <>
@@ -95,28 +197,25 @@ const Page = () => {
               noValidate
               onSubmit={formik.handleSubmit}
             >
-              <Stack spacing={3}>
+              <Stack spacing={5}>
                 <TextField
-                  error={!!(formik.touched.name && formik.errors.name)}
+                  // error={!!(formik.touched.name && formik.errors.name)}
+                  error={!!((formik.touched.name && formik.errors.name) || !nameOk)}
                   fullWidth
                   helperText={formik.touched.name && formik.errors.name}
+
                   label="Name"
                   name="name"
                   onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
+                  onChange={(event) => {
+                    formik.handleChange(event, true); // 保留表单状态更新
+                  }}
+                  helperText={
+                    (formik.touched.name && formik.errors.name) || (nameOk === false && "This name is not available")
+                  }
                   value={formik.values.name}
                 />
-                <TextField
-                  error={!!(formik.touched.email && formik.errors.email)}
-                  fullWidth
-                  helperText={formik.touched.email && formik.errors.email}
-                  label="Email Address"
-                  name="email"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="email"
-                  value={formik.values.email}
-                />
+
                 <TextField
                   error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
@@ -124,10 +223,30 @@ const Page = () => {
                   label="Password"
                   name="password"
                   onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
+                  onChange={(event) => {
+                    formik.handleChange(event); // 保留表单状态更新
+
+                  }}
                   type="password"
                   value={formik.values.password}
                 />
+                  <PasswordStrength sx={{ width: '100%' }} strength={passStrength} />
+
+                <Cool  formik={formik}/>
+                <TextField  // 渲染一个Material-UI TextField组件
+                  error={!!(formik.touched.verificationCode && formik.errors.verificationCode)}
+                  fullWidth
+                  helperText={formik.touched.verificationCode && formik.errors.verificationCode}
+                  label="verificationCode"
+                  name="verificationCode"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="verificationCode"
+                  value={formik.values.verificationCode}
+                  style={{padding:0}}
+
+                />
+
               </Stack>
               {formik.errors.submit && (
                 <Typography

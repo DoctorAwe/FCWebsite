@@ -18,32 +18,48 @@ import {
 } from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
+import Cool from './cool';
+import Cool1 from './cool1';
 
 const Page = () => {
   const router = useRouter();
   const auth = useAuth();
-  const [method, setMethod] = useState('email');
+  const [method, setMethod] = useState('accountPassword');
   const formik = useFormik({
     initialValues: {
       email: 'demo@devias.io',
-      password: 'Password123!',
+      phone: '',
+      password: '',
+      account:'',
+      checkNum:'',
       submit: null
     },
     validationSchema: Yup.object({
-      email: Yup
+
+      account: Yup
         .string()
-        .email('Must be a valid email')
         .max(255)
-        .required('Email is required'),
+        .required('account is required'),
+      phone: Yup
+        .string()
+        .matches(/^1[3-9]\d{9}$/, 'Must be a valid tel') // 正则表达式来验证中国大陆的手机号
+        .max(255)
+        .required('Phone Number is required'),
       password: Yup
         .string()
         .max(255)
-        .required('Password is required')
+        .required('Password is required'),
+
+      checkNumber: Yup
+        .string()
+        .max(255)
+        .required('checkNumber is required'),
+
+
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
-        router.push('/');
+
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -66,6 +82,21 @@ const Page = () => {
     },
     [auth, router]
   );
+
+  async function handleAccPwd() {
+    console.log("co" + formik.values.account + formik.values.password);
+    await auth.signIn(formik.values.account, formik.values.password);
+    console.log("登录完了跳");
+    router.push('/');
+  }
+
+  async function handleMess() {
+    console.log("执行短信登录" + formik.values.phone + "check : " + formik.values.checkNum);
+    console.log("0009"+ formik.values.phone + "   "+  formik.values.checkNum);
+    await auth.signInMess(formik.values.phone, formik.values.checkNum);
+    console.log("短信登录完了跳");
+    router.push('/');
+  }
 
   return (
     <>
@@ -121,31 +152,33 @@ const Page = () => {
               value={method}
             >
               <Tab
-                label="Email"
-                value="email"
+                label="Account Password"
+                value="accountPassword"
               />
               <Tab
                 label="Phone Number"
                 value="phoneNumber"
               />
             </Tabs>
-            {method === 'email' && (
+            {method === 'accountPassword' && (
               <form
                 noValidate
                 onSubmit={formik.handleSubmit}
               >
                 <Stack spacing={3}>
                   <TextField
-                    error={!!(formik.touched.email && formik.errors.email)}
+                    error={!!(formik.touched.account && formik.errors.account)}
                     fullWidth
-                    helperText={formik.touched.email && formik.errors.email}
-                    label="Email Address"
-                    name="email"
+                    helperText={formik.touched.account && formik.errors.account}
+                    label="Account Number"
+                    name="account"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    type="email"
-                    value={formik.values.email}
+                    type="account"
+                    value={formik.values.account}
                   />
+
+
                   <TextField
                     error={!!(formik.touched.password && formik.errors.password)}
                     fullWidth
@@ -171,6 +204,7 @@ const Page = () => {
                   </Typography>
                 )}
                 <Button
+                  onClick={handleAccPwd}
                   fullWidth
                   size="large"
                   sx={{ mt: 3 }}
@@ -198,18 +232,72 @@ const Page = () => {
                 </Alert>
               </form>
             )}
+
+
+             {/*短信登录*/}
             {method === 'phoneNumber' && (
-              <div>
-                <Typography
-                  sx={{ mb: 1 }}
-                  variant="h6"
+              <form
+                noValidate
+                onSubmit={formik.handleSubmit}
+              >
+                <Stack spacing={3}>
+                  <Cool1  formik={formik} />
+
+                  <TextField
+                    error={!!(formik.touched.checkNum && formik.errors.checkNum)}
+                    fullWidth
+                    helperText={formik.touched.checkNum && formik.errors.checkNum}
+                    label="Check Number"
+                    name="checkNum"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    type="account"
+                    value={formik.values.checkNum}
+                  />
+
+
+
+                </Stack>
+                <FormHelperText sx={{ mt: 1 }}>
+                  Optionally you can skip.
+                </FormHelperText>
+                {formik.errors.submit && (
+                  <Typography
+                    color="error"
+                    sx={{ mt: 3 }}
+                    variant="body2"
+                  >
+                    {formik.errors.submit}
+                  </Typography>
+                )}
+                <Button
+                  onClick={handleMess}
+                  fullWidth
+                  size="large"
+                  sx={{ mt: 3 }}
+                  type="submit"
+                  variant="contained"
                 >
-                  Not available in the demo
-                </Typography>
-                <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the demo.
-                </Typography>
-              </div>
+                  Continue
+                </Button>
+                <Button
+                  fullWidth
+                  size="large"
+                  sx={{ mt: 3 }}
+                  onClick={handleSkip}
+                >
+                  Skip authentication
+                </Button>
+                <Alert
+                  color="primary"
+                  severity="info"
+                  sx={{ mt: 3 }}
+                >
+                  <div>
+                    You can use <b>demo@devias.io</b> and password <b>Password123!</b>
+                  </div>
+                </Alert>
+              </form>
             )}
           </div>
         </Box>

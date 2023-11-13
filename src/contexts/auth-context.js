@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
+import login from '../pages/auth/login';
+import { useRouter } from 'next/navigation';
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -75,7 +77,8 @@ export const AuthProvider = (props) => {
     let isAuthenticated = false;
 
     try {
-      isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
+      isAuthenticated = true;
+      // isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
     } catch (err) {
       console.error(err);
     }
@@ -127,32 +130,80 @@ export const AuthProvider = (props) => {
     });
   };
 
-  const signIn = async (email, password) => {
-    if (email !== 'demo@devias.io' || password !== 'Password123!') {
-      throw new Error('Please check your email and password');
-    }
+  const signIn = async (account, password) => {
 
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
+    console.log("账号密码登录正在执行" + account + password);
+    const url = '/api/user/login';
+    const data = { 'username': account, 'encrypted':password};
 
-    const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
-    };
-
-    dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     });
+
+    const responseData = await response.json(); // 转换响应为 JSON 格式
+    console.log('登录Response Data.code:', responseData.code); // 输出响应信息
+    if (responseData.code !== 0) {
+      throw new Error('Network response was not ok');
+    }
+
+    // dispatch({
+    //   type: HANDLERS.SIGN_IN,
+    //   payload: user
+    // });
   };
 
-  const signUp = async (email, name, password) => {
-    throw new Error('Sign up is not implemented');
+  const signInMess = async (tel, code) => {
+
+    console.log("短信登录正在执行" + tel + code);
+    const url = '/api/user/login_token';
+    const data = { 'tel': tel, 'code':code};
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const responseData = await response.json(); // 转换响应为 JSON 格式
+    console.log("resDate code : " + responseData.code);
+    if (responseData.code !== 0) {
+      throw new Error('Network response was not ok');
+    }
+
+    // dispatch({
+    //   type: HANDLERS.SIGN_IN,
+    //   payload: user
+    // });
+  };
+
+
+  const signUp = async (name, encrypted, tel, code) => {
+
+    console.log("注册正在执行" + name + encrypted + tel + code);
+    const url = '/api/user/sign_up';
+    const data = { 'username': name, 'encrypted':encrypted, 'tel':tel, 'code':code};
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+    const responseData = await response.json(); // 转换响应为 JSON 格式
+    console.log("注册响应code为: " + responseData.code);
+      if (responseData.code !== 0) {
+        throw new Error('Network response was not ok');
+      }
+
+
   };
 
   const signOut = () => {
@@ -167,6 +218,7 @@ export const AuthProvider = (props) => {
         ...state,
         skip,
         signIn,
+        signInMess,
         signUp,
         signOut
       }}
