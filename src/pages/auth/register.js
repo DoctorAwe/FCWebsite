@@ -210,9 +210,6 @@ const Page = () => {
                   onChange={(event) => {
                     formik.handleChange(event, true); // 保留表单状态更新
                   }}
-                  helperText={
-                    (formik.touched.name && formik.errors.name) || (nameOk === false && "This name is not available")
-                  }
                   value={formik.values.name}
                 />
 
