@@ -63,8 +63,8 @@ export const AccountProfileDetails = () => {
           ...prevState,
           // [event.target.name]: event.target.value,
 
-          email: '在此修改',
-          phone:'在此修改',
+          email: ' ',
+          phone:' ',
 
 
         }));
@@ -89,13 +89,13 @@ export const AccountProfileDetails = () => {
 
 
   const [values, setValues] = useState({
-    firstName: 'Anika',
-    lastName: 'Visser',
+    firstName: ' ',
+    lastName: ' ',
 
-    email: 'test email',
-    phone: '',
-    state: 'los-angeles',
-    country: 'USA'
+    email: ' ',
+    phone: ' ',
+    state: ' ',
+    country: ' '
   });
 
   const handleChange = useCallback(

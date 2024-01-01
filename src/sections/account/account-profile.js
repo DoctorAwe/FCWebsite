@@ -135,12 +135,18 @@ import {
 export const AccountProfile = () => {
   // 在组件内部使用 useState
   const [user, setUser] = useState({
-    avatar: '/assets/avatars/avatar-anika-visser.png',
-    city: 'Los Angeles',
-    country: 'USA1111',
-    jobTitle: 'Senior Developer',
-    name: 'Anika Visser11111111111111',
-    timezone: 'GTM-7'
+    // avatar: '/assets/avatars/avatar-anika-visser.png',
+    // city: 'Los Angeles',
+    // country: 'USA1111',
+    // jobTitle: 'Senior Developer',
+    // name: 'Anika Visser11111111111111',
+    // timezone: 'GTM-7'
+    avatar: ' ',
+    city: ' ',
+    country: ' ',
+    jobTitle: ' ',
+    name: ' ',
+    timezone: ' '
   });
 
   useEffect(() => {
@@ -171,7 +177,7 @@ export const AccountProfile = () => {
 
         // 在这里更新用户状态
         setUser((prevUser) => ({
-          ...prevUser,
+          // ...prevUser,
 
           name: responseData2.data.username,
           id: responseData2.data.id,

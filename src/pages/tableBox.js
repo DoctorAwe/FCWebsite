@@ -20,11 +20,6 @@ const now = new Date();
 const data = [
   //
 ];
-
-
-
-
-
 const Page = () => {
   pagination.hideOnSinglePage = true;
 

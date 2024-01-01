@@ -115,7 +115,6 @@ const Page = () => {
       return;
     }
 
-
     // try {
     //   window.sessionStorage.setItem('authenticated', 'true');
     //   // window.localStorage.setItem('authenticated', 'true');
@@ -123,8 +122,7 @@ const Page = () => {
     //   console.error(err);
     //
     // }
-
-
+    console.log("登录成功！");
     router.push('/');
   }
 

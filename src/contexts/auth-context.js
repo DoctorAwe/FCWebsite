@@ -154,11 +154,17 @@ export const AuthProvider = (props) => {
 
     }
 
+    const user = {
+      id: ' ',
+      avatar: ' ',
+      name: ' ',
+      email: ' '
+    };
 
-
-
-
-
+    dispatch({
+      type: HANDLERS.SIGN_IN,
+      payload: user
+    });
   };
 
   const signInMess = async (tel, code) => {

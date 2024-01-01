@@ -477,15 +477,16 @@ const { Column } = Table;
 const App = () => {
   const classification = useState('');
   const [data, setData] = useState([
-    {
-      key: '1',
-      firstName: 'John',
-      lastName: 'Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-      createdAt: new Date().toLocaleString(),
-    },
+    // testinit
+    // {
+    //   key: '1',
+    //   firstName: 'John',
+    //   lastName: 'Brown',
+    //   age: 32,
+    //   address: 'New York No. 1 Lake Park',
+    //   tags: ['nice', 'developer'],
+    //   createdAt: new Date().toLocaleString(),
+    // },
     // Add more initial data as needed
   ]);
 
