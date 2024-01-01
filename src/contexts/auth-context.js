@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import login from '../pages/auth/login';
-import { useRouter } from 'next/navigation';
+
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -113,14 +113,16 @@ export const AuthProvider = (props) => {
   const skip = () => {
     try {
       window.sessionStorage.setItem('authenticated', 'true');
+      // window.localStorage.setItem('authenticated', 'true');
     } catch (err) {
       console.error(err);
+
     }
 
     const user = {
       id: '5e86809283e28b96d2d38537',
       avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
+      name: '阿成',
       email: 'anika.visser@devias.io'
     };
 
@@ -128,6 +130,7 @@ export const AuthProvider = (props) => {
       type: HANDLERS.SIGN_IN,
       payload: user
     });
+
   };
 
   const signIn = async (account, password) => {
@@ -147,13 +150,15 @@ export const AuthProvider = (props) => {
     const responseData = await response.json(); // 转换响应为 JSON 格式
     console.log('登录Response Data.code:', responseData.code); // 输出响应信息
     if (responseData.code !== 0) {
-      throw new Error('Network response was not ok');
+      throw new Error('Login failed');
+
     }
 
-    // dispatch({
-    //   type: HANDLERS.SIGN_IN,
-    //   payload: user
-    // });
+
+
+
+
+
   };
 
   const signInMess = async (tel, code) => {
@@ -202,7 +207,6 @@ export const AuthProvider = (props) => {
       if (responseData.code !== 0) {
         throw new Error('Network response was not ok');
       }
-
 
   };
 

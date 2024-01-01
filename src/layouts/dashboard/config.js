@@ -90,5 +90,14 @@ export const items = [
       <FlagIcon/>
     </SvgIcon>
   )
+  },
+  {
+    title: 'TableBox',
+    path: '/tableBox',
+    icon: (
+      <SvgIcon fontSize="small">
+        <FlagIcon/>
+      </SvgIcon>
+    )
   }
 ];

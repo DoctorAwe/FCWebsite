@@ -151,18 +151,26 @@ export default function IsCellEditableGrid(props) {
     {
       id: 1,
       name: 'ID',
-      age: props.node_id,
+      age: props.curS && props.curS.id,
       editable: false
     },
     {
       id: 2,
       name: '位置',
-      age: props.node_pos,
-      editable: true
-
+      age: (props.curS && props.curS.position)
+        ? JSON.stringify(props.curS.position.x, null, 0) + ", " + JSON.stringify(props.curS.position.y, null, 0)
+        : " "
     },
-
+    {
+      id: 3,
+      name: 'model',
+      age: (props.curS && props.curS.model)
+        ? JSON.stringify(props.curS.model, null, 0)
+        : " ",
+      editable: true
+    }
   ];
+
 
   const columns = [
     { field: 'name',
@@ -192,11 +200,16 @@ export default function IsCellEditableGrid(props) {
               theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
           },
         }}
+        style={{
+          backgroundColor:"pink"
+        }}
     >
       <DataGrid
+
+        style={{backgroundColor:'skyblue'}}
         rows={rows}
         columns={columns}
-
+        hideFooterPagination={true}
       />
     </Box>
   );

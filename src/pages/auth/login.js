@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -20,8 +20,10 @@ import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 import Cool from './cool';
 import Cool1 from './cool1';
+import { useAuthContext } from '../../contexts/auth-context';
 
 const Page = () => {
+  let { isAuthenticated} = useAuthContext();
   const router = useRouter();
   const auth = useAuth();
   const [method, setMethod] = useState('accountPassword');
@@ -57,9 +59,11 @@ const Page = () => {
 
 
     }),
+
+
     onSubmit: async (values, helpers) => {
       try {
-
+        console.log("66");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -67,6 +71,8 @@ const Page = () => {
       }
     }
   });
+
+
 
   const handleMethodChange = useCallback(
     (event, value) => {
@@ -77,16 +83,48 @@ const Page = () => {
 
   const handleSkip = useCallback(
     () => {
+      console.log(isAuthenticated);
+      isAuthenticated = false;
+      console.log(isAuthenticated);
+
+
       auth.skip();
       router.push('/');
     },
     [auth, router]
   );
 
+
   async function handleAccPwd() {
-    console.log("co" + formik.values.account + formik.values.password);
-    await auth.signIn(formik.values.account, formik.values.password);
-    console.log("登录完了跳");
+
+
+    const isValidField = (fieldName) => !formik.errors[fieldName];
+    if(!(isValidField('account') && formik.values.account.length !== 0) ){
+      return;
+    }
+    if(!(isValidField('password') && formik.values.password.length !== 0)){
+      return;
+    }
+
+    try {
+      console.log("co" + formik.values.account + formik.values.password);
+      await auth.signIn(formik.values.account, formik.values.password);
+      console.log("登录完了跳");
+    } catch (err){
+      console.log(err);
+      return;
+    }
+
+
+    // try {
+    //   window.sessionStorage.setItem('authenticated', 'true');
+    //   // window.localStorage.setItem('authenticated', 'true');
+    // } catch (err) {
+    //   console.error(err);
+    //
+    // }
+
+
     router.push('/');
   }
 
@@ -211,7 +249,7 @@ const Page = () => {
                   type="submit"
                   variant="contained"
                 >
-                  Continue
+                  Continue11
                 </Button>
                 <Button
                   fullWidth

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -31,10 +31,68 @@ const states = [
 ];
 
 export const AccountProfileDetails = () => {
+
+  useEffect(() => {
+    // 在组件内部使用 useEffect
+    const fetchData = async () => {
+      try {
+        console.log('正在请求用户信息');
+        const url2 = '/api/user/user_info';
+        const data = {};
+
+        const response2 = await fetch(url2, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const responseData2 = await response2.json();
+        console.log('user_info Data.code:', responseData2.code);
+        if (responseData2.code !== 0) {
+          throw new Error('userinfo failed');
+        }
+
+        console.log("成功获取用户信息");
+
+        window.sessionStorage.setItem('authenticated', 'true');
+
+        // 在这里更新用户状态
+        setValues((prevState) => ({
+          ...prevState,
+          // [event.target.name]: event.target.value,
+
+          email: '在此修改',
+          phone:'在此修改',
+
+
+        }));
+        console.log("68 " + responseData2.data.email);
+
+
+        // dispatch({
+        //   type: HANDLERS.SIGN_IN,
+        //   payload: user
+        // });
+
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, []); // 注意：这里是空数组，表示只在组件挂载时执行
+
+
+
+
+
   const [values, setValues] = useState({
     firstName: 'Anika',
     lastName: 'Visser',
-    email: 'demo@devias.io',
+
+    email: 'test email',
     phone: '',
     state: 'los-angeles',
     country: 'USA'
