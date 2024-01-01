@@ -36,6 +36,14 @@ export default function IsCellEditableGrid(props) {
       age: (props.curS && props.curS.model != null)
         ? JSON.stringify(props.curS.model, null, 0)
         : null,
+    },
+    {
+      id: 4,
+      name: 'model',
+      type: 'number',
+      age: (props.curS && props.curS.model != null)
+        ? JSON.stringify(props.curS.model, null, 0)
+        : null,
     }
   ];
 
