@@ -127,6 +127,10 @@ const Page = () => {
   }
 
   async function handleMess() {
+
+
+
+
     console.log("执行短信登录" + formik.values.phone + "check : " + formik.values.checkNum);
     console.log("0009"+ formik.values.phone + "   "+  formik.values.checkNum);
     await auth.signInMess(formik.values.phone, formik.values.checkNum);

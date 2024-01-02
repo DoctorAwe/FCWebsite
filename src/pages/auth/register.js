@@ -30,7 +30,6 @@ const Page = () => {
     initialValues: {
       tel:'',
       name: '',
-
       password: '',
       verificationCode:'',
       submit: null,
@@ -104,6 +103,13 @@ const Page = () => {
 
 
   async function handleAccountChange() {
+    const isValidField = (fieldName) => !formik.errors[fieldName];
+    if(!(isValidField('tel') && formik.values.tel.length !== 0) ){
+      return;
+    }
+    if(!(isValidField('password') && formik.values.password.length !== 0)){
+      return;
+    }
 
 
       console.log("now acc change to " + formik.values.name);
@@ -120,6 +126,7 @@ const Page = () => {
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
+
       }
 
       const resData = await response.json();

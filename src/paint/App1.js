@@ -74,13 +74,13 @@
     const [curId, setCurId] = useState(1);
     const [connectPreNode, setconnectPreNode] = useState([]);
 
-    useEffect(() => {
-      console.log("380 点个数" + nodes.length);
-    }, [nodes]);
+    // useEffect(() => {
+    //    console.log("380 点个数" + nodes.length);
+    // }, [nodes]);
 
     const onNodesDelete = useCallback(
       (deleted) => {
-        console.log("380 setedges")
+        // console.log("380 setedges")
         setEdges(
           deleted.reduce((acc, node) => {
 
@@ -308,7 +308,7 @@
       console.log("孩子传给父亲 + 615 " + JSON.stringify(sgData, null, 2));
       const updatedNodes = nodes.map((node) => {
         console.log("被选中："+ selectedNodeIds + "now" + node.id);
-        if (sgData.id.includes(node.id)) {
+        if (sgData.id === node.id) {
           console.log("619 父 亲 收 到 信 息 正 在 找");
           // 对node 修改
           node.model = parseInt(sgData.newValue);
