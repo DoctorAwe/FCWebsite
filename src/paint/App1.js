@@ -1,5 +1,6 @@
 
   import React, { useCallback, useEffect, useRef, useState } from 'react';
+
   import ReactFlow, {
     useNodesState,
     useEdgesState,
@@ -11,6 +12,8 @@
   import 'reactflow/dist/style.css';
   import Sside_bar from 'src/paint/Sside_bar.js';
   import Show_group from './show_group';
+  import ServiceProviderListComponent from './ServiceProviderListComponent';
+  import ServiceProviderDetailComponent from './ServiceProviderDetailComponent';
 
 
   // 若有额外属性add处也得改
@@ -21,7 +24,8 @@
       data: { label: 'Node' },
       position: { x: 0, y: 50 },
       dd:45125,
-      model: 0
+      model: 0,
+      provider_id:null,
     },
     {
       id: '1',
@@ -30,7 +34,8 @@
       data: { label: 'Node' },
       position: { x: 110, y: 150 },
       dd:45125,
-      model: 1
+      model: 1,
+      provider_id:null,
     },
 
   ];
@@ -333,6 +338,30 @@
       onChange: handleSelectionChange,
     });
 
+    const [selectedProvider, setSelectedProvider] = useState(null);
+
+    const serviceProviders = [{ "name":"provider1","id":0 }, { "name":"provider2","id":2 }, { "name":"provider3","id":1 },]; // 示例服务商列表
+
+    const handleProviderClick = (provider) => {
+      // todo judge if current node is None
+      if(CurSelect.length != 0){
+        console.log(CurSelect)
+      setSelectedProvider(provider);}
+    };
+
+    const handleBackClick = () => {
+
+      setSelectedProvider(null);
+    };
+    const handleConfirmClick = (selectedProvider) => {
+      // todo set this provider for current node, to complement this, you might to set a global var for now selected provider,and when the code run to here,set this var for current node.
+
+      CurSelect.provider = selectedProvider.id;
+      setCurSelect(CurSelect)
+      console.log(CurSelect.provider)
+      setSelectedProvider(null);
+    };
+
     return (
 
 
@@ -383,7 +412,19 @@
             {/*右侧信息栏*/}
             <div className={'my_div'} style={{height:'100%',width:'24%',flexDirection:'column', background:'white'}}>
               <div className={'my_div'} style={{height:'40%',width:'100%', backgroundColor: "pink"}}>
-
+                {selectedProvider ? (
+                  // eslint-disable-next-line react/jsx-no-undef
+                  <ServiceProviderDetailComponent
+                    selectedProvider={selectedProvider}
+                    onBackClick={handleBackClick}
+                    onConfirmClick={handleConfirmClick}
+                  />
+                ) : (
+                  <ServiceProviderListComponent
+                    serviceProviders={serviceProviders}
+                    onProviderClick={handleProviderClick}
+                  />
+                )}
               </div>
               <div className={'my_div'} style={{height:'60%',width:'100%',display:"flex", overflow:"hidden"}}>
                 {/*<Show_group node_id ={selectedNodeIds} node_pos  = '点的位置'/>*/}
@@ -417,6 +458,8 @@
 
 
 
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
 
 
 
