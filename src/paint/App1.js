@@ -688,26 +688,12 @@ const AddNodeOnEdgeDrop = () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
 // // connect出额外点
-// // 切换不出去
+// // 切换不出去  useeffect导致的
 // // id有问题
-// // 415位置不对
+// // 右键菜单位置不对
+// // 用curS 位置未实时更新
+// // 无选中回复空
 //
 //
 // import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -724,7 +710,7 @@ const AddNodeOnEdgeDrop = () => {
 //   getConnectedEdges,
 //   MarkerType,
 //   Background,
-//   MiniMap
+//   MiniMap, Controls
 // } from 'reactflow';
 // import 'reactflow/dist/style.css';
 // import Sside_bar from 'src/paint/Sside_bar.js';
@@ -736,13 +722,17 @@ const AddNodeOnEdgeDrop = () => {
 // import * as tag2Options from 'react-bootstrap/ElementChildren';
 // import * as tag1Options from 'react-bootstrap/ElementChildren';
 //
+// import { blue } from '@mui/material/colors';
+// import { duration } from '@mui/material';
+// import { color, fontFamily, fontStyle } from '@mui/system';
+//
 //
 // // 若有额外属性add处也得改
 // const initialNodes = [
 //   {
-//     id: '99999',
-//     // type: 'input',
-//     data: { label: 'Node' },
+//     id: `100`,
+//     type: 'input',
+//     data: { label: '开始' },
 //     position: { x: 0, y: 50 },
 //     dd:45125,
 //     model: 0,
@@ -750,10 +740,19 @@ const AddNodeOnEdgeDrop = () => {
 //     targetPosition: 'top',    // 接入点在顶部
 //   },
 //   {
-//     id: '100000',
+//     id: `1847`,
+//     type: 'output',
+//     data: { label: '结束' },
+//     position: { x: 0, y: 100 },
+//     dd:45125,
+//     model: 0,
+//     sourcePosition: 'bottom', // 拖出点在底部
+//     targetPosition: 'top',    // 接入点在顶部
+//   },
+//   {
+//     id: `9`,
 //     // type: 'input',
-//
-//     data: { label: 'Node', money: 666 },
+//     data: { label: '分支', money: 666 },
 //     position: { x: 110, y: 150 },
 //     dd:45124225,
 //     model: 1,
@@ -803,8 +802,10 @@ const AddNodeOnEdgeDrop = () => {
 //   const ref = useRef(null);
 //   const [isModalVisible, setIsModalVisible] = useState(false);
 //   const [currentId, setCurrentId]=useState(0);
+//   const { setViewport, zoomIn, zoomOut } = useReactFlow();
 //   const minimapStyle = {
 //     height: 120,
+//
 //   };
 //   const [newData, setNewData] = useState({
 //     firstName: '',
@@ -854,19 +855,16 @@ const AddNodeOnEdgeDrop = () => {
 //
 //       console.log("412Params:", JSON.stringify(params, null, 2));
 //       // setEdges((eds) => addEdge(params, eds))
-//
-//
-//
 //       console.log("model 为0");
 //       setEdges((eds) =>
-//         eds.concat({ id:generateUniqueId(), source: params.source, target: params.target, markerEnd: {
+//         eds.concat({ id:`random_${new Date()}`, source: params.source, target: params.target, markerEnd: {
 //             type: MarkerType.ArrowClosed,
 //             width: 20,
 //             height: 20,
 //             color: '#00FF00',
 //           },
 //
-//           label: '选择其一',
+//           label: '执行连接, 立刻更新覆盖此字段',
 //           style: {
 //             strokeWidth: 2,
 //             stroke: '#00FF00',
@@ -884,6 +882,8 @@ const AddNodeOnEdgeDrop = () => {
 //     console.log("onConnectStart" + nodeId );
 //     connectingNodeId.current = nodeId;
 //   }, []);
+//
+//
 //
 //
 //   const onConnectEnd = useCallback(
@@ -904,9 +904,10 @@ const AddNodeOnEdgeDrop = () => {
 //             y: event.clientY - top,
 //
 //           }),
-//           data: { label: `Node ${id}` },
+//           // data: { label: `Node ${id}` },
+//           data: { label: `事件结点` },
 //           origin: [0.5, 0.0],
-//           model:  1,
+//           model:  0,
 //         };
 //         console.log("451 setnode");
 //
@@ -930,6 +931,7 @@ const AddNodeOnEdgeDrop = () => {
 //                 width: 20,
 //                 height: 20,
 //                 color: '#FF0072',
+//
 //               },
 //
 //               label: '选择其一',
@@ -948,7 +950,7 @@ const AddNodeOnEdgeDrop = () => {
 //                 color: '#00FF00',
 //               },
 //
-//               label: '选择其一',
+//               label: ' ',
 //               style: {
 //                 strokeWidth: 2,
 //                 stroke: '#00FF00',
@@ -971,7 +973,7 @@ const AddNodeOnEdgeDrop = () => {
 //
 //       id: `random_${new Date()}`,
 //       // id: `randomnode_${+new Date()}`,
-//       data: { label: 'Added node' },
+//       data: { label: '默认结点' },
 //       position: {
 //         x: Math.random() * window.innerWidth - 100,
 //         y: Math.random() * window.innerHeight,
@@ -1011,6 +1013,7 @@ const AddNodeOnEdgeDrop = () => {
 //     },
 //   };
 //
+//   // 维护边样式
 //   useEffect(() => {
 //     // 根据 source 节点的 model 值更新边的样式
 //     const updatedEdges = edges.map((edge) => {
@@ -1025,6 +1028,8 @@ const AddNodeOnEdgeDrop = () => {
 //             height: 20,
 //             color: '#FF0072',
 //           };
+//           newEdge.animated=true;
+//           newEdge.label = '选择其一';
 //           newEdge.style = {
 //             strokeWidth: 2,
 //             stroke: '#FF0072',
@@ -1036,6 +1041,7 @@ const AddNodeOnEdgeDrop = () => {
 //             height: 20,
 //             color: '#00FF00',
 //           };
+//           newEdge.label = ' ';
 //           newEdge.style = {
 //             strokeWidth: 2,
 //             stroke: '#00FF00',
@@ -1051,35 +1057,25 @@ const AddNodeOnEdgeDrop = () => {
 //   }, [nodes, edges]);
 //
 //
+//   // 维护边的样式
 //   useEffect(() => {
 //     // 创建一个新的样式对象
 //     const updatedNodes = nodes.map((node) => {
-//       // console.log("被选中："+ selectedNodeIds + "now" + node.id);
-//
 //       if (selectedNodeIds.includes(node.id)) {
-//         // console.log("jinle");
-//         // 对node 修改
 //         node.className = 'selected-node';
-//         // update Pos
 //         setSelectedNodePos(node.position);
-//
-//         // curSelect
 //         setCurSelect(node);
-//
-//         // 594 被选中对象的信息
-//         // console.log("alallalalalal595 " + JSON.stringify(CurSelect, null, 2));
-//       }else {
-//         node.className = '.react-flow__node';
+//       }else if(node.model ===1) {
+//         node.className = 'logic_node';
+//       } else{
+//         node.className = 'react-flow__node';
 //       }
-//
-//       // 否则，保持原始样式
 //       return node;
 //     });
-//
-//
-//     // 更新节点状态
 //     setNodes(updatedNodes);
 //   }, [selectedNodeIds, nodes]);
+//
+//
 //
 //
 //
@@ -1144,20 +1140,14 @@ const AddNodeOnEdgeDrop = () => {
 //         x: 0.85 * (event.clientX - reactFlowBounds.left),
 //         y: 0.85 *  (event.clientY - reactFlowBounds.top)
 //       });
-//
-//
-//
 //       const newNode = {
-//         id: getId(),
+//         id: `random_${new Date()}`,
 //         position,
-//         data: { label: `${type} node` },
+//         data: { label: `${type}` },
 //         model: 1,
 //
 //         sourcePosition: 'bottom', // 拖出点在底部
 //         targetPosition: 'top',    // 接入点在顶部
-//
-//
-//
 //
 //       };
 //
@@ -1241,6 +1231,18 @@ const AddNodeOnEdgeDrop = () => {
 //     console.log("hello");
 //   }
 //
+//   function nodeColor(node) {
+//     switch (node.type) {
+//       case 'input':
+//         return '#6ede87';
+//       case 'output':
+//         return '#6865A5';
+//       default:
+//         return '#ff0072';
+//     }
+//   }
+//
+//
 //   return (
 //
 //
@@ -1293,7 +1295,9 @@ const AddNodeOnEdgeDrop = () => {
 //
 //       <div style={{ height: '100%', width: '100%', display:"flex",flexDirection:"column", padding:0, margin:0 }}>
 //         {/*顶部菜单栏*/}
-//         <div className={'my_div'} style={{ height: '8%', width: '100%', display:"flex",flexDirection:"row" }} >
+//         <div className={'my_div'} style={{ height: '8%', width: '100%', display:"flex",flexDirection:"row", alignItems:"center", justifyContent: "center"}} >
+//           {/*<p style={{ fontFamily: 'KaiTi', fontWeight: 'bold' }}>面向多流程协同的云制造流程定制</p>*/}
+//           <p className={'headText'}>面向多流程协同的云制造流程定制</p>
 //
 //         </div>
 //
@@ -1316,6 +1320,7 @@ const AddNodeOnEdgeDrop = () => {
 //
 //           {/*显示主体  */}
 //           <div className={'my_div'} style={{height:'100%',width:'75%',margin:0}}>
+//
 //             <ReactFlow
 //               nodes={nodes}
 //               edges={edges}
@@ -1335,11 +1340,13 @@ const AddNodeOnEdgeDrop = () => {
 //               onDrop={onDrop}
 //               onDragOver={onDragOver}
 //               ref={ref}
-//             />
-//             {menu && <ContextMenu  showModal = {showModal}  onClick={onPaneClick} {...menu}  />}
-//             <Panel position={"top-center"}></Panel>
-//             <MiniMap style={minimapStyle} zoomable pannable />
-//
+//             >
+//               <Panel position={"top-center"}></Panel>
+//               {menu && <ContextMenu   showModal = {showModal}  onClick={onPaneClick} {...menu}  />}
+//               <MiniMap style={minimapStyle} position = 'bottom-right' nodeColor={nodeColor} zoomable pannable />
+//               <Controls  onZoomOut={() => zoomOut({ duration: 150 })} onZoomIn={() => zoomIn({ duration: 150 }) }/>
+//               <Background color="#ccc" gap={25} size ={3} />
+//             </ReactFlow>
 //
 //           </div>
 //
@@ -1368,3 +1375,5 @@ const AddNodeOnEdgeDrop = () => {
 //     <AddNodeOnEdgeDrop />
 //   </ReactFlowProvider>
 // );
+
+
