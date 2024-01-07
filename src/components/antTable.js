@@ -487,7 +487,7 @@ const App = () => {
     //   tags: ['nice', 'developer'],
     //   createdAt: new Date().toLocaleString(),
     // },
-    // Add more initial data as needed
+
   ]);
 
   const [optionMap, setOptionMap] = useState(new Map());
@@ -698,13 +698,6 @@ const App = () => {
     });
   };
 
-  const handleTagsChange = (e) => {
-    const tags = e.target.value.split(',').map(tag => tag.trim());
-    setNewData({
-      ...newData,
-      tags: tags,
-    });
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -810,7 +803,6 @@ const App = () => {
     console.log("删除了 " + recordKey);
     setData(data.filter(item => item.key !== recordKey));
 
-
   };
 
   return (
@@ -889,9 +881,7 @@ const App = () => {
                 ))}
               </Select>
             </Col>
-
           </Row>
-
         </div>
       </Modal>
     </div>

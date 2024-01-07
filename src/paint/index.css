@@ -1,32 +1,41 @@
 .react-flow .react-flow__handle {
-  width: 30px;
-  height: 14px;
-  border-radius: 3px;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 20px;
   background-color: #784be8;
 }
 
-.react-flow .react-flow__handle-top {
-  top: -10px;
-}
+/*.react-flow .react-flow__handle-top {*/
+/*  top: -10px;*/
+/*}*/
 
-.react-flow .react-flow__handle-bottom {
-  bottom: -10px;
-}
+/*.react-flow .react-flow__handle-bottom {*/
+/*  bottom: -10px;*/
+/*}*/
 
 .react-flow .react-flow__node {
-  height: 40px;
-  width: 150px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  display: flex;
-  border-width: 2px;
   font-weight: 700;
+  border-radius: 20px;
+  border-width: 1px;
+  box-shadow: 6px 6px 0 1px rgba(0, 0, 0, 0.7);
+
+
 }
 
-.react-flow .react-flow__edge path,
-.react-flow__connectionline path {
-  stroke-width: 2;
-}
+/*.react-flow .react-flow__edge path,*/
+/*.react-flow__connectionline path {*/
+/*  stroke-width: 2;*/
+/*}*/
+
+/*.intersection-flow .react-flow__node.selected,*/
+/*!*.intersection-flow .react-flow__node:hover,*!*/
+/*.intersection-flow .react-flow__node:focus {*/
+/*  box-shadow: 6px 6px 0 1px rgba(0, 0, 0, 0.7);*/
+/*  background-color: #eee;*/
+/*}*/
 
 .wrapper {
   flex-grow: 1;
@@ -44,9 +53,7 @@
   border: 1px solid lightgrey; /* 浅灰色的边界线 */
 }
 
-
 .side_button{
-
   border-radius: 10px;
   background-color:yellow;
   margin-top: 30%;
@@ -65,16 +72,58 @@
   /*background-color:lightgrey;*/
 }
 
-.selected-node {
-  background-color: blue !important;
-  border: 2px solid blue !important;
-}
-
 .line {
   border: none;
   border-top: 2px solid lightgrey; /* 设置分割线的宽度和颜色 */
-  width: 50%; /* 设置分割线的宽度 */
+  width: 100%; /* 设置分割线的宽度 */
   margin: 10px 0;
-
 }
 
+.context-menu {
+  background: white;
+  border-style: solid;
+  box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
+  position: absolute;
+  z-index: 10;
+}
+
+.context-menu button {
+  border: none;
+  display: block;
+  padding: 0.5em;
+  text-align: left;
+  width: 100%;
+}
+
+.context-menu button:hover {
+  background: white;
+}
+
+.headText {
+  padding: 0;
+  font-family: 'KaiTi', cursive;
+  font-size:36px;
+  font-weight: 1000;
+  letter-spacing: 15px;
+  text-align: center;
+  line-height: 2em;
+}
+
+.logic_node{
+  height: 60px !important;
+  width: 60px !important;
+
+  background-color: #ff0072 !important;
+  border-radius:50% !important;
+}
+
+.selected-node {
+  /*background-color: blue !important;*/
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  background-color: yellow !important;
+  border-width: 1px !important;
+  box-shadow: 4px 4px 0 1px rgba(0, 0, 0, 0.7) !important;
+  font-size: 0 !important;
+}
