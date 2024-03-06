@@ -35,6 +35,9 @@ import * as tag1Options from 'react-bootstrap/ElementChildren';
 import { blue } from '@mui/material/colors';
 import { duration } from '@mui/material';
 import { color, fontFamily, fontStyle } from '@mui/system';
+import { Option } from 'antd/es/mentions';
+import ServiceProviderListComponent from './ServiceProviderListComponent';
+import ServiceProviderDetailComponent from './ServiceProviderDetailComponent';
 
 
   // 若有额外属性add处也得改
@@ -541,6 +544,30 @@ const AddNodeOnEdgeDrop = () => {
     console.log("hello");
   }
 
+
+  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [confirmedProvider, setConfirmedProvider] = useState(null);
+
+  const serviceProviders = [
+    { id: 1, name: '服务供应商1' },
+    { id: 2, name: '服务供应商2' },
+    { id: 3, name: '服务供应商3' },
+  ];
+
+  const handleProviderClick = (providerId) => {
+    setSelectedProvider(providerId);
+  };
+
+  const handleBackClick = () => {
+    setSelectedProvider(null);
+  };
+
+  const handleConfirmClick = () => {
+    // 在这里可以执行确认选择后的操作
+    // 比如设置 confirmedProvider 状态，或者发起相关请求等
+    setConfirmedProvider(selectedProvider);
+  };
+
   function nodeColor(node) {
     switch (node.type) {
       case 'input':
@@ -663,6 +690,25 @@ const AddNodeOnEdgeDrop = () => {
             {/*右侧信息栏*/}
             <div className={'my_div'} style={{height:'100%',width:'24%',flexDirection:'column', background:'white'}}>
               <div className={'my_div'} style={{height:'40%',width:'100%'}}>
+                {selectedProvider ? (
+                  <ServiceProviderDetailComponent
+                    selectedProvider={selectedProvider}
+                    onBackClick={handleBackClick}
+                    onConfirmClick={handleConfirmClick}
+                  />
+                ) : (
+                  <ServiceProviderListComponent
+                    serviceProviders={serviceProviders}
+                    onProviderClick={handleProviderClick}
+                  />
+                )}
+
+                {confirmedProvider && (
+                  <div>
+                    <h2>已确认选择的服务商ID: {confirmedProvider}</h2>
+                    {/* 显示其他已确认选择的服务商信息 */}
+                  </div>
+                )}
               </div>
               <div className={'my_div'} style={{height:'60%',width:'100%',display:"flex", overflow:"hidden"}}>
                 {/*<Show_group node_id ={selectedNodeIds} node_pos  = '点的位置'/>*/}

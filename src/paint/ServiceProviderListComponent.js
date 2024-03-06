@@ -11,7 +11,7 @@ const ServiceProviderListComponent = ({ serviceProviders, selectedProvider, onPr
 
   return (
     <div>
-      <h2>服务商列表</h2>
+      <h2>当前节点服务商列表</h2>
       <ul>
         {serviceProviders.map((provider) => (
           <li
