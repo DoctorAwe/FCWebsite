@@ -2,10 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridCellEditStopReasons, useGridApiRef } from '@mui/x-data-grid';
 import { useEffect, useRef, useState } from 'react';
-import { GridCellEditStopParams } from '@mui/x-data-grid';
-import { MuiEvent } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { green, purple } from '@mui/material/colors';
+
 export default function IsCellEditableGrid(props) {
   const theme = createTheme({
     palette: {

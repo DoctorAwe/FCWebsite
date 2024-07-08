@@ -1,5 +1,6 @@
 module.exports = {
   reactStrictMode: true
+
 };
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
@@ -9,7 +10,7 @@ module.exports = {
     return [
       {
         source: '/:path*', // 匹配的路径
-        destination: 'http://61.183.42.66:53390/:path*', // 实际的后端 API 地址
+        destination: 'http://localhost:8080/:path*', // 实际的后端 API 地址
       },
     ];
   },

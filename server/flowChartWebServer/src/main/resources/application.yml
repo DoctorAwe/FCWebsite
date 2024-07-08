@@ -1,0 +1,56 @@
+# spring doc-openapi
+springdoc:
+  swagger-ui:
+    path: /doc/swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.server.flowchartwebserver
+
+# database
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  mvc:
+    static-path-pattern: /static/**
+
+
+
+# knife4j
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# server address
+server:
+  address: localhost
+  port: 8080
+
+# redis
+spring.data.redis:
+  host: localhost
+  port: 6379
+  jedis.pool:
+    max-wait: -1
+    max-idle: 8
+    min-idle: 0
+  timeout: 30000
