@@ -37,7 +37,7 @@ public class SendSmsServiceImpl implements SendSmsService {
     @Override
     public String sendSms(String tel, String msg) throws DysmsApiInvokeFailedException {
         try {
-            com.aliyun.dysmsapi20170525.Client client = createClient("LTAI5tKhVasXCRyY53zi1LxY", "9gRdVyhHYugEjrnSftrGBmc0FmrZu9");
+            com.aliyun.dysmsapi20170525.Client client = createClient("appkey", "secretKey");
             com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
                     .setSignName("王鑫磊的短信")
                     .setTemplateCode("SMS_463790378")
